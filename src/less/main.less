@@ -1,0 +1,39 @@
+@import "variables";
+@import "mixins";
+
+a,
+a:hover,
+a:focus,
+a:active,
+a.active {
+    color: @brand-success;
+    outline: none;
+}
+
+a.magic {
+    position: relative;
+    text-decoration: none;
+
+    &:before {
+        background: @brand-primary;
+        bottom: -2px;
+        content: '';
+        left: 0;
+        position: absolute;
+        .transition(all 0.3s ease-in-out);
+        width: 0;
+        height: 2px;
+    }
+
+    &:hover, &:active {
+        &:before {
+            width: 100%;
+        }
+    }
+}
+
+.btn:focus,
+.btn:active,
+.btn.active {
+    outline: none;
+}

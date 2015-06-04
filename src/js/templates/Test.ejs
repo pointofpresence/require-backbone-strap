@@ -1,0 +1,6 @@
+<% _.each(data, function(item, id) { %>
+<div class="col-sm-3 text-center">
+    <img src="<%= item.svg.png_thumb %>" class="img-responsive img-thumbnail" alt="<%= id %>">
+    <div class="text-center"><%= item.title %></div>
+</div>
+<% }); %>

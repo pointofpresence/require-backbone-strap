@@ -1,0 +1,71 @@
+.button-variant(@color; @background; @border) {
+    color: @color;
+    background-color: @background;
+    border-color: @border;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    .open .dropdown-toggle& {
+        color: @color;
+        background-color: darken(@background, 10%);
+        border-color: darken(@border, 12%);
+    }
+    &:active,
+    &.active,
+    .open .dropdown-toggle& {
+        background-image: none;
+    }
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &,
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            background-color: @background;
+            border-color: @border;
+        }
+    }
+
+    .badge {
+        color: @background;
+        background-color: @color;
+    }
+}
+
+.rotate-button(@x:-50%, @y:-50%, @angle:45deg) {
+    -webkit-transform: translateX(@x) translateY(@y) rotate(@angle);
+    -moz-transform: translateX(@x) translateY(@y) rotate(@angle);
+    -ms-transform: translateX(@x) translateY(@y) rotate(@angle);
+    -o-transform: translateX(@x) translateY(@y) rotate(@angle);
+    transform: translateX(@x) translateY(@y) rotate(@angle);
+}
+
+.transition(@transition) {
+    -webkit-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
+}
+
+.transition(@transition1; @transition2) {
+    -webkit-transition: @transition1, @transition2;
+    -o-transition: @transition1, @transition2;
+    transition: @transition1, @transition2;
+}
+
+.scale(@ratio) {
+    -webkit-transform: scale(@ratio);
+    -ms-transform: scale(@ratio); // IE9 only
+    -o-transform: scale(@ratio);
+    transform: scale(@ratio);
+}
+
+.scale(@ratioX; @ratioY) {
+    -webkit-transform: scale(@ratioX, @ratioY);
+    -ms-transform: scale(@ratioX, @ratioY); // IE9 only
+    -o-transform: scale(@ratioX, @ratioY);
+    transform: scale(@ratioX, @ratioY);
+}
