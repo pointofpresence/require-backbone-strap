@@ -129,6 +129,11 @@ function versionIncrement() {
     writeJsonFile("./package.json", pkg);
 }
 
+function dateUpdate() {
+    pkg.lastBuildDate = toMysqlFormat(new Date());
+    writeJsonFile("./package.json", pkg);
+}
+
 function readJsonFile(file, options) {
     try {
         return JSON.parse(fs.readFileSync(file, options))
@@ -143,6 +148,18 @@ function writeJsonFile(file, obj, options) {
 
     //noinspection JSUnresolvedFunction
     return fs.writeFileSync(file, str, options);
+}
+
+function twoDigits(d) {
+    if (0 <= d && d < 10) return "0" + d.toString();
+    if (-10 < d && d < 0) return "-0" + (-1 * d).toString();
+    return d.toString();
+}
+
+function toMysqlFormat(d) {
+    return d.getUTCFullYear() + "-" + twoDigits(1 + d.getUTCMonth())
+        + "-" + twoDigits(d.getUTCDate()) + " " + twoDigits(d.getUTCHours())
+        + ":" + twoDigits(d.getUTCMinutes()) + ":" + twoDigits(d.getUTCSeconds());
 }
 
 gulp.task("build_css", buildCss);
@@ -166,6 +183,7 @@ gulp.task("watch", function () {
 });
 
 gulp.task("build", function () {
+    dateUpdate();
     versionIncrement();
     buildCss();
     buildHtml();
