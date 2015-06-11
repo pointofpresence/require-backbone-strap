@@ -13,7 +13,8 @@ uglify     = require("gulp-uglify"),        // JS min
 ejsmin     = require("gulp-ejsmin"),        // EJS min
 header     = require("gulp-header"),        // banner maker
 mkdirp     = require("mkdirp"),             // mkdir
-fs         = require("fs");                 // fs
+fs         = require("fs"),                // fs
+replace    = require("gulp-replace");       // replace
 
 var src     = "./src",
     srcJs   = src + "/js",
@@ -96,6 +97,11 @@ function buildHtml() {
 
     gulp.src("./index-src.html")
         .pipe(minifyHTML(opts))
+        .pipe(replace("##TITLE##", pkg.title || "Unknown"))
+        .pipe(replace("##DESCRIPTION##", pkg.description || "Unknown"))
+        .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
+        .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
+        .pipe(replace("##VERSION##", pkg.version || "Unknown"))
         .pipe(out("./index.html"));
 }
 
