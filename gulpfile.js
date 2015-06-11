@@ -97,6 +97,7 @@ function buildHtml() {
 
     gulp.src("./index-src.html")
         .pipe(minifyHTML(opts))
+        .pipe(replace("/src/js/main", "/dist/js/modules"))
         .pipe(replace("##TITLE##", pkg.title || "Unknown"))
         .pipe(replace("##DESCRIPTION##", pkg.description || "Unknown"))
         .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
