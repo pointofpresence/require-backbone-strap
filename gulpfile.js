@@ -137,6 +137,18 @@ function buildHtml() {
         .pipe(out("./index.html"));
 }
 
+function buildReadme() {
+    gulp.src(src + "/README.md")
+        .pipe(replace("##TITLE##", pkg.title || "Unknown"))
+        .pipe(replace("##NAME##", pkg.name || "Unknown"))
+        .pipe(replace("##DESCRIPTION##", pkg.description || "Unknown"))
+        .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
+        .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
+        .pipe(replace("##VERSION##", pkg.version || "Unknown"))
+        .pipe(replace("##DATE##", pkg.lastBuildDateUtc || "Unknown"))
+        .pipe(out("./README.md"));
+}
+
 function buildCss() {
     mkdirp(distCss);
 
@@ -188,6 +200,7 @@ gulp.task("build_html", buildHtml);
 gulp.task("build_tpl_plugin", buildTplPlugin);
 gulp.task("build_templates", buildTemplates);
 gulp.task("build_amd", buildAmd);
+gulp.task("build_readme", buildReadme);
 
 gulp.task("watch", function () {
     gulp.watch(srcLess + "/**/*.less", ["build_css"]);
@@ -199,8 +212,10 @@ gulp.task("watch", function () {
     gulp.watch(srcJs + lib + "/**/*.js", ["build_amd"]);
     gulp.watch(srcJs + models + "/**/*.js", ["build_amd"]);
     gulp.watch(srcJs + views + "/**/*.js", ["build_amd"]);
-    gulp.watch(srcJs + "main.js", ["build_amd"]);
-    gulp.watch(srcJs + "templates.js", ["build_amd"]);
+    gulp.watch(srcJs + "/main.js", ["build_amd"]);
+    gulp.watch(srcJs + "/templates.js", ["build_amd"]);
+
+    gulp.watch(src + "/README.md", ["build_readme"]);
 });
 
 gulp.task("build", function () {
@@ -211,4 +226,5 @@ gulp.task("build", function () {
     buildTplPlugin();
     buildTemplates();
     buildAmd();
+    buildReadme();
 });
