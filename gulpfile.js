@@ -13,7 +13,7 @@ uglify     = require("gulp-uglify"),        // JS min
 ejsmin     = require("gulp-ejsmin"),        // EJS min
 header     = require("gulp-header"),        // banner maker
 mkdirp     = require("mkdirp"),             // mkdir
-fs         = require("fs"),                // fs
+fs         = require("fs"),                 // fs
 replace    = require("gulp-replace");       // replace
 
 var src     = "./src",
@@ -37,11 +37,42 @@ var banner = [
     ' * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author %>',
     ' * <%= pkg.name %> - <%= pkg.description %>',
     ' * @version v<%= pkg.version %>',
+    ' * @build <%= pkg.lastBuildDateUtc %>',
     ' * @link <%= pkg.repository %>',
     ' * @license <%= pkg.license %>',
     ' */',
     ''
 ].join('\n');
+
+var dateHelper = {
+    twoDigits: function (d) {
+        if (0 <= d && d < 10)
+            return "0" + d.toString();
+
+        if (-10 < d && d < 0)
+            return "-0" + (-1 * d).toString();
+
+        return d.toString();
+    },
+
+    /**
+     * @param {Date} d
+     */
+    toMysqlFormat: function (d) {
+        return d.getUTCFullYear() + "-" + this.twoDigits(1 + d.getUTCMonth())
+            + "-" + this.twoDigits(d.getUTCDate()) + " "
+            + this.twoDigits(d.getUTCHours())
+            + ":" + this.twoDigits(d.getUTCMinutes()) + ":"
+            + this.twoDigits(d.getUTCSeconds());
+    },
+
+    /**
+     * @param {Date} d
+     */
+    toUnixTimestamp: function (d) {
+        return Math.floor(d.getTime() / 1000);
+    }
+};
 
 function buildAmd() {
     gulp
@@ -118,7 +149,7 @@ function buildCss() {
 }
 
 function versionIncrement() {
-    var v = (pkg.version || "1.0.0").split(".");
+    var v = (pkg.version || "0.0.0").split(".");
 
     pkg.version = [
         v[0] ? v[0] : 1,
@@ -130,7 +161,9 @@ function versionIncrement() {
 }
 
 function dateUpdate() {
-    pkg.lastBuildDate = toMysqlFormat(new Date());
+    var d = new Date();
+    pkg.lastBuildDate = dateHelper.toUnixTimestamp(d);
+    pkg.lastBuildDateUtc = d.toUTCString();
     writeJsonFile("./package.json", pkg);
 }
 
@@ -148,18 +181,6 @@ function writeJsonFile(file, obj, options) {
 
     //noinspection JSUnresolvedFunction
     return fs.writeFileSync(file, str, options);
-}
-
-function twoDigits(d) {
-    if (0 <= d && d < 10) return "0" + d.toString();
-    if (-10 < d && d < 0) return "-0" + (-1 * d).toString();
-    return d.toString();
-}
-
-function toMysqlFormat(d) {
-    return d.getUTCFullYear() + "-" + twoDigits(1 + d.getUTCMonth())
-        + "-" + twoDigits(d.getUTCDate()) + " " + twoDigits(d.getUTCHours())
-        + ":" + twoDigits(d.getUTCMinutes()) + ":" + twoDigits(d.getUTCSeconds());
 }
 
 gulp.task("build_css", buildCss);
