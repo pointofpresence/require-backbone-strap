@@ -31,6 +31,10 @@ require([
     "use strict";
 
     $(function () {
+        $(document).on("click", "a[href=#]", function (e) {
+            e.preventDefault();
+        });
+
         var testView = new TestView;
     });
 });
