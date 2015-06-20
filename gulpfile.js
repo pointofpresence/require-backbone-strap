@@ -14,7 +14,9 @@ ejsmin       = require("gulp-ejsmin"),        // EJS min
 header       = require("gulp-header"),        // banner maker
 mkdirp       = require("mkdirp"),             // mkdir
 fs           = require("fs"),                 // fs
-autoprefixer = require('gulp-autoprefixer'),  // CSS autoprefixer
+autoprefixer = require("gulp-autoprefixer"),  // CSS autoprefixer
+gutil        = require("gulp-util"),          // log and other
+chalk        = require("chalk"),              // colors
 replace      = require("gulp-replace");       // replace
 
 var src     = "./src",
@@ -36,7 +38,7 @@ var pkg = require('./package.json');
 var banner = [
     '/**',
     ' * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author %>',
-    ' * <%= pkg.name %> - <%= pkg.description %>',
+    ' * <%= pkg.title %> (<%= pkg.name %>) - <%= pkg.description %>',
     ' * @version v<%= pkg.version %>',
     ' * @build <%= pkg.lastBuildDateUtc %>',
     ' * @link <%= pkg.repository %>',
@@ -182,6 +184,8 @@ function versionIncrement() {
         (v[2] ? parseInt(v[2]) : 0) + 1
     ].join(".");
 
+    gutil.log("Current version: " + chalk.blue(pkg.version));
+
     writeJsonFile("./package.json", pkg);
 }
 
@@ -189,15 +193,10 @@ function dateUpdate() {
     var d = new Date();
     pkg.lastBuildDate = dateHelper.toUnixTimestamp(d);
     pkg.lastBuildDateUtc = d.toUTCString();
-    writeJsonFile("./package.json", pkg);
-}
 
-function readJsonFile(file, options) {
-    try {
-        return JSON.parse(fs.readFileSync(file, options))
-    } catch (err) {
-        return null
-    }
+    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
+
+    writeJsonFile("./package.json", pkg);
 }
 
 function writeJsonFile(file, obj, options) {
