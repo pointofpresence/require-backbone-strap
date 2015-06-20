@@ -18,6 +18,7 @@ autoprefixer = require("gulp-autoprefixer"),  // CSS autoprefixer
 gutil        = require("gulp-util"),          // log and other
 chalk        = require("chalk"),              // colors
 dateHelper   = require("resampled-date"),     // date helper
+jsonHelper   = require("resampled-json-io"),  // JSON helper
 replace      = require("gulp-replace");       // replace
 
 var src     = "./src",
@@ -157,7 +158,7 @@ function versionIncrement() {
 
     gutil.log("Current version: " + chalk.blue(pkg.version));
 
-    writeJsonFile("./package.json", pkg);
+    jsonHelper.write("./package.json", pkg);
 }
 
 function dateUpdate() {
@@ -167,15 +168,7 @@ function dateUpdate() {
 
     gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
 
-    writeJsonFile("./package.json", pkg);
-}
-
-function writeJsonFile(file, obj, options) {
-    var spaces = 2,
-        str = JSON.stringify(obj, null, spaces) + '\n';
-
-    //noinspection JSUnresolvedFunction
-    return fs.writeFileSync(file, str, options);
+    jsonHelper.write("./package.json", pkg);
 }
 
 gulp.task("build_css", buildCss);
