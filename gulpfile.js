@@ -72,7 +72,7 @@ function buildTemplates() {
     mkdirp(distDir);
 
     gulp
-        .src(srcDir + "/*.ejs")
+        .src(srcDir + "/**/*.ejs")
         .pipe(ejsmin({removeComment: false}))
         .pipe(gulp.dest(distDir));
 }
