@@ -1,8 +1,8 @@
-# Require Backbone Strap v1.0.12
+# Require Backbone Strap v1.0.13
 ## aka require-backbone-strap
 
 Author: pointofpresence
 
-Last build date: Sun, 21 Jun 2015 14:40:38 GMT
+Last build date: Sun Jun 28 2015 14:17:20
 
 Boilerplate for RequireJS/Backbone/Bootstrap/Gulp based projects.

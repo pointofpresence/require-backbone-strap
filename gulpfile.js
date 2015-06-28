@@ -17,7 +17,7 @@ fs           = require("fs"),                 // fs
 autoprefixer = require("gulp-autoprefixer"),  // CSS autoprefixer
 gutil        = require("gulp-util"),          // log and other
 chalk        = require("chalk"),              // colors
-dateHelper   = require("resampled-date"),     // date helper
+dateFormat   = require("dateformat"),         // date helper
 jsonHelper   = require("resampled-json-io"),  // JSON helper
 replace      = require("gulp-replace");       // replace
 
@@ -42,7 +42,7 @@ var banner = [
     ' * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author %>',
     ' * <%= pkg.title %> (<%= pkg.name %>) - <%= pkg.description %>',
     ' * @version v<%= pkg.version %>',
-    ' * @build <%= pkg.lastBuildDateUtc %>',
+    ' * @build <%= pkg.lastBuildDateHuman %>',
     ' * @link <%= pkg.repository %>',
     ' * @license <%= pkg.license %>',
     ' */',
@@ -120,7 +120,7 @@ function buildReadme() {
         .pipe(replace("##AUTHOR##", pkg.author || "Unknown"))
         .pipe(replace("##REPOSITORY##", pkg.repository || "Unknown"))
         .pipe(replace("##VERSION##", pkg.version || "Unknown"))
-        .pipe(replace("##DATE##", pkg.lastBuildDateUtc || "Unknown"))
+        .pipe(replace("##DATE##", pkg.lastBuildDateHuman || "Unknown"))
         .pipe(out("./README.md"));
 }
 
@@ -163,10 +163,10 @@ function versionIncrement() {
 
 function dateUpdate() {
     var d = new Date();
-    pkg.lastBuildDate = dateHelper.toUnixTimestamp(d);
-    pkg.lastBuildDateUtc = d.toUTCString();
+    pkg.lastBuildDate = dateFormat(d, "isoUtcDateTime");
+    pkg.lastBuildDateHuman = dateFormat(d);
 
-    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateUtc));
+    gutil.log("Build date: " + chalk.blue(pkg.lastBuildDateHuman));
 
     jsonHelper.write("./package.json", pkg);
 }
